@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameStateManager : MonoBehaviour
 {
     public GameManager gameManager;
+    public GameObject rotatecube;
     // Enum representing different game states
     public enum GameState
     {
@@ -43,22 +45,15 @@ public class GameStateManager : MonoBehaviour
     }
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.M))
-        {
-            ChangeState(GameState.MainMenu_State);
-        }
-
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) && currentState == GameState.Gameplay_State)
         {
             ChangeState(GameState.Paused_State);
         }
-
-        if (Input.GetKeyDown(KeyCode.G))
+        else if (Input.GetKeyDown(KeyCode.Escape) && currentState == GameState.Paused_State)
         {
             ChangeState(GameState.Gameplay_State);
         }
     }
-
 
     // Handles any specific actions that need to occur when switching to a new state
     private void HandleStateChange(GameState state)
@@ -69,6 +64,7 @@ public class GameStateManager : MonoBehaviour
                 Debug.Log("Switched to MainMenu State");
                 gameManager.uiManager.EnableMenuUI();
                 Time.timeScale = 0.0f;
+                rotatecube.SetActive(false);
                 // TODO: Add logic for when the game enters the Main Menu (e.g., show UI)
                 break;
 
@@ -76,6 +72,7 @@ public class GameStateManager : MonoBehaviour
                 Debug.Log("Switched to Gameplay State");
                 gameManager.uiManager.EnableGameUI();
                 Time.timeScale = 1.0f;
+                rotatecube.SetActive(true);
                 // TODO: Add logic for starting/resuming the game (e.g., enable player movement)
                 break;
 
@@ -83,6 +80,7 @@ public class GameStateManager : MonoBehaviour
                 Debug.Log("Switched to Paused State");
                 gameManager.uiManager.EnablePauseUI();
                 Time.timeScale = 0.0f;
+                rotatecube.SetActive(true);
                 // TODO: Add logic for pausing the game (e.g., stop player movement, show pause menu)
                 break;
         }
